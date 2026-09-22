@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es-419">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para mi amor, Abigail 🌻</title>
+  <style>
+    :root {
+      --morado: #120320;
+      --morado-claro: #3c1348;
+      --rosado: #ff5e7e;
+      --rosado-suave: #ff99ac;
+      --amarillo: #ffd700;
+      --amarillo-brillo: #fff473;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--morado), var(--morado-claro), var(--rosado));
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      padding-top: 20px;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+      color: var(--amarillo);
+    }
+
+    p.subtitulo {
+      font-size: 1.05rem;
+      margin-top: 6px;
+      color: #ffe6f2;
+      padding: 0 15px;
+    }
+
+    /* Escenario principal */
+    .stage {
+      position: relative;
+      width: 100vw;
+      height: 82vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    /* Canvas para el Árbol Mágico */
+    #treeCanvas {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Flor Gigante Inicial */
+    .main-flower-container {
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: pointer;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      z-index: 10;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-flower-container:hover {
+      transform: translateX(-50%) scale(1.08);
+    }
+
+    .flower-center {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, #7a3e0f, #3d1c03);
+      border-radius: 50%;
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.6);
+      border: 2px solid var(--amarillo);
+    }
+
+    .flower-center span {
+      color: var(--amarillo-brillo);
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-shadow: 1px 1px 4px #000;
+    }
+
+    /* Pétalos grandes creados dinámicamente con CSS */
+    .petal {
+      position: absolute;
+      width: 42px;
+      height: 110px;
+      background: linear-gradient(to top, var(--amarillo), var(--amarillo-brillo));
+      border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%;
+      top: -15px;
+      left: 39px;
+      transform-origin: bottom center;
+      z-index: 2;
+      box-shadow: 0 0 10px rgba(0,0,0,0.25);
+    }
+
+    .petal:nth-child(1) { transform: rotate(0deg) translateY(-45px); }
+    .petal:nth-child(2) { transform: rotate(45deg) translateY(-45px); }
+    .petal:nth-child(3) { transform: rotate(90deg) translateY(-45px); }
+    .petal:nth-child(4) { transform: rotate(135deg) translateY(-45px); }
+    .petal:nth-child(5) { transform: rotate(180deg) translateY(-45px); }
+    .petal:nth-child(6) { transform: rotate(225deg) translateY(-45px); }
+    .petal:nth-child(7) { transform: rotate(270deg) translateY(-45px); }
+    .petal:nth-child(8) { transform: rotate(315deg) translateY(-45px); }
+
+    /* Flores detalladas pequeñas del árbol */
+    .tree-flower-wrapper {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      z-index: 20;
+      animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      transform: scale(0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tree-flower-center {
+      width: 14px;
+      height: 14px;
+      background: #5c2f0d;
+      border-radius: 50%;
+      z-index: 2;
+      box-shadow: inset 0 0 3px #000;
+    }
+
+    .mini-petal {
+      position: absolute;
+      width: 10px;
+      height: 20px;
+      background: linear-gradient(to top, var(--amarillo), var(--amarillo-brillo));
+      border-radius: 50%;
+      transform-origin: bottom center;
+      top: -2px;
+      left: 13px;
+      z-index: 1;
+    }
+
+    .mini-petal:nth-child(1) { transform: rotate(0deg) translateY(-6px); }
+    .mini-petal:nth-child(2) { transform: rotate(45deg) translateY(-6px); }
+    .mini-petal:nth-child(3) { transform: rotate(90deg) translateY(-6px); }
+    .mini-petal:nth-child(4) { transform: rotate(135deg) translateY(-6px); }
+    .mini-petal:nth-child(5) { transform: rotate(180deg) translateY(-6px); }
+    .mini-petal:nth-child(6) { transform: rotate(225deg) translateY(-6px); }
+    .mini-petal:nth-child(7) { transform: rotate(270deg) translateY(-6px); }
+    .mini-petal:nth-child(8) { transform: rotate(315deg) translateY(-6px); }
+
+    .tree-flower-wrapper:hover {
+      transform: scale(1.4) !important;
+    }
+
+    @keyframes pop {
+      to { transform: scale(1); }
+    }
+
+    /* Modal / Ventana Emergente para los Poemas */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.78);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, var(--morado-claro), var(--rosado));
+      padding: 30px 25px;
+      border-radius: 20px;
+      border: 2px solid var(--amarillo);
+      max-width: 380px;
+      width: 85%;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+      position: relative;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    .poema-texto {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      font-style: italic;
+      color: #FFF;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Para mi amor, Abigail</h1>
+    <p class="subtitulo" id="instruccion">Toca la flor para hacer crecer nuestro árbol ✨</p>
+  </header>
+
+  <div class="stage" id="stage">
+    <!-- Flor Gigante Inicial -->
+    <div class="main-flower-container" id="mainFlower">
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="flower-center">
+        <span>Abigail</span>
+      </div>
+    </div>
+
+    <!-- Canvas para dibujar el Árbol Grande -->
+    <canvas id="treeCanvas"></canvas>
+  </div>
+
+  <!-- Modal con Poemas -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <button class="close-btn" id="closeModal">&times;</button>
+      <p class="poema-texto" id="poemaTexto"></p>
+    </div>
+  </div>
+
+  <script>
+    const mainFlower = document.getElementById('mainFlower');
+    const stage = document.getElementById('stage');
+    const instruccion = document.getElementById('instruccion');
+    const modal = document.getElementById('modal');
+    const poemaTexto = document.getElementById('poemaTexto');
+    const closeModal = document.getElementById('closeModal');
+    const canvas = document.getElementById('treeCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = stage.clientWidth;
+      canvas.height = stage.clientHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Colección ampliada de 12 poemas bonitos
+    const poemas = [
+      "Eres mi refugio favorito, la luz que ilumina cada uno de mis días.",
+      "Si volviera a nacer, te buscaría mucho más rápido solo para amarte más tiempo.",
+      "Tu sonrisa es la poesía más hermosa que mis ojos han podido contemplar.",
+      "En cada pétalo de este árbol hay un 'te amo' guardado especialmente para ti.",
+      "Eres el regalo más bonito que la vida me ha dado, mi dulce Abigail.",
+      "Amarte es tan natural y hermoso como el florecer de la primavera.",
+      "Tu amor hace que todo mi mundo sea más cálido, dulce y brillante.",
+      "Donde sea que estés, ahí estará siempre latiendo mi corazón.",
+      "Eres esa estrellita brillante que llena mis noches de calma y luz.",
+      "Contigo entendí que los lugares más bonitos del mundo son a tu lado.",
+      "Tu voz es mi melodía preferida y tu abrazo mi rincón de paz.",
+      "Te amo no solo por lo que eres, sino por lo feliz que me haces al estar contigo."
+    ];
+
+    let flowerPositions = [];
+    let treeGrown = false;
+
+    // Al presionar la flor gigante inicial
+    mainFlower.addEventListener('click', () => {
+      if (treeGrown) return;
+      treeGrown = true;
+
+      instruccion.textContent = "Toca cada flor amarilla del árbol para leer sus poemas ✨";
+      
+      mainFlower.style.opacity = '0';
+      mainFlower.style.transform = 'translateX(-50%) scale(0)';
+
+      setTimeout(() => {
+        mainFlower.style.display = 'none';
+        growTree();
+      }, 800);
+    });
+
+    // Función principal para animar el árbol
+    function growTree() {
+      const startX = canvas.width / 2;
+      const startY = canvas.height;
+      // Árbol más grande proporcional a la pantalla
+      const trunkHeight = canvas.height * 0.28;
+
+      let currentStep = 0;
+      const totalSteps = 40;
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        flowerPositions = [];
+
+        // Dibujar estructura del árbol
+        drawBranch(startX, startY, trunkHeight, -Math.PI / 2, 16, 0, currentStep / totalSteps);
+
+        if (currentStep < totalSteps) {
+          currentStep++;
+          requestAnimationFrame(animate);
+        } else {
+          // Generar flores detalladas en las puntas de las ramas
+          spawnTreeFlowers();
+        }
+      }
+
+      animate();
+    }
+
+    // Dibujar ramas y hojas de manera recursiva
+    function drawBranch(x, y, length, angle, branchWidth, depth, progress) {
+      if (depth > 4) {
+        flowerPositions.push({ x: x, y: y });
+        return;
+      }
+
+      const currentLength = length * progress;
+      const endX = x + Math.cos(angle) * currentLength;
+      const endY = y + Math.sin(angle) * currentLength;
+
+      // Dibujar madera
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(endX, endY);
+      ctx.strokeStyle = '#4A2A0C';
+      ctx.lineWidth = branchWidth;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // Dibujar copas de hojas en ramas secundarias
+      if (depth >= 1 && progress > 0.3) {
+        drawLeaves(endX, endY, depth);
+      }
+
+      if (progress >= 1) {
+        drawBranch(endX, endY, length * 0.78, angle - 0.42, branchWidth * 0.7, depth + 1, 1);
+        drawBranch(endX, endY, length * 0.78, angle + 0.42, branchWidth * 0.7, depth + 1, 1);
+      }
+    }
+
+    // Dibujar follaje denso y colorido
+    function drawLeaves(x, y, depth) {
+      const leafColors = [
+        'rgba(76, 175, 80, 0.65)', 
+        'rgba(129, 199, 132, 0.65)', 
+        'rgba(255, 122, 162, 0.55)', 
+        'rgba(255, 182, 193, 0.5)'
+      ];
+      const count = 7 - depth;
+
+      for (let i = 0; i < count; i++) {
+        ctx.beginPath();
+        const offsetX = (Math.random() - 0.5) * 35;
+        const offsetY = (Math.random() - 0.5) * 35;
+        ctx.arc(x + offsetX, y + offsetY, 9 + Math.random() * 7, 0, Math.PI * 2);
+        ctx.fillStyle = leafColors[Math.floor(Math.random() * leafColors.length)];
+        ctx.fill();
+      }
+    }
+
+    // Generar flores amarillas detalladas con pétalos
+    function spawnTreeFlowers() {
+      const totalFlowers = 12;
+      const stepSize = Math.max(1, Math.floor(flowerPositions.length / totalFlowers));
+      const selectedCoords = flowerPositions.filter((_, idx) => idx % stepSize === 0).slice(0, totalFlowers);
+
+      selectedCoords.forEach((coord, index) => {
+        setTimeout(() => {
+          const wrapper = document.createElement('div');
+          wrapper.classList.add('tree-flower-wrapper');
+          wrapper.style.left = `${coord.x - 18}px`;
+          wrapper.style.top = `${coord.y - 18}px`;
+
+          // Generar 8 pétalos para cada flor pequeña
+          for (let p = 0; p < 8; p++) {
+            const petal = document.createElement('div');
+            petal.classList.add('mini-petal');
+            wrapper.appendChild(petal);
+          }
+
+          // Centro de la flor pequeña
+          const center = document.createElement('div');
+          center.classList.add('tree-flower-center');
+          wrapper.appendChild(center);
+
+          wrapper.addEventListener('click', () => {
+            poemaTexto.textContent = poemas[index % poemas.length];
+            modal.style.display = 'flex';
+          });
+
+          stage.appendChild(wrapper);
+        }, index * 180);
+      });
+    }
+
+    // Control de la ventana emergente
+    closeModal.addEventListener('click', () => { modal.style.display = 'none'; });
+    window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+  </script>
+</body>
+</html>
